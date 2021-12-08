@@ -1,0 +1,9 @@
+Moralis.Cloud.define("getNFT", async (request) => {
+  	let NFTId = request.params.nftId;
+  	let hexId = parseInt(NFTId).toString(16);
+  	let paddedHex = ("0000000000000000000000000000000000000000000000000000000000" + hexId).slice(-64);
+  	Moralis.Cloud.httpRequest({ url: "https://xntjjz8dhvme.usemoralis.com/" + paddedHex + ".json"})
+  	.then(function(httpResponse){
+      return httpResponse.text;
+    });
+});

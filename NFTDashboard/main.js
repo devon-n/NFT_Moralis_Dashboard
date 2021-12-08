@@ -47,26 +47,25 @@ function renderInventory(NFTs) {
 
     for (let i = 0; i < NFTs.length; i++){
         const nft = NFTs[i];
-        console.log("nft: ", nft)
 
-        // Retreiving the owners every time isn't reliable TODO FIND SOLUTION
-        // GET KEYS FROM JSON FILE
         let nftOwners;
         try {
             nftOwners = nft.owners.length;
         } catch (err) {
-            nftOwners = 3;
+            nftOwners = 1;
         }
-
+        console.log(nft)
         let htmlString = `
-        <div class="card">
-            <img class="card-img-top" src="${nft.metadata.image}" alt="Card image cap">
+        <div class="card h-100">
+            <img class="card-img-top h-50" src="${nft.metadata.image}" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">${nft.metadata.name}</h5>
                 <p class="card-text">${nft.metadata.description}</p>
-                <p class="card-text">No. of Owners: ${nftOwners}</p>
                 <p class="card-text">Tokens in Circulation: ${nft.amount}</p>
-                <a href="/mint.html?nftId=${nft.token_id}" class="btn btn-primary">Mint</a>
+                <p class="card-text">No. of Owners: ${nftOwners}</p>
+                <p class="card-text">Token ID: ${nft.token_id}</p>
+                <a href="./mint.html?nftId=${nft.token_id}" class="btn btn-primary">Mint</a>
+                <a href="./transfer.html?nftId=${nft.token_id}" class="btn btn-primary">Transfer</a>
             </div>
         </div>`
 
@@ -85,13 +84,10 @@ async function initializeApp() {
 
     let NFTs = await Moralis.Web3API.token.getAllTokenIds(options);
 
-    // console.log("NFTs.result", NFTs.result);
-
     
 
     let NFTWithMetadata = await fetchNFTMetadata(NFTs.result);
     NFTWithMetadata = NFTs.result;
-    // console.log("NFTWithMetadata", NFTWithMetadata);
 
     renderInventory(NFTWithMetadata);
 

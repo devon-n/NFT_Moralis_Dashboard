@@ -1,8 +1,11 @@
-appId = "OMMWpue0pgjSfWCypiQeu4QMEtdBeO3czkWArsZc";
-serverUrl = "https://xntjjz8dhvme.usemoralis.com:2053/server";
-Moralis.start({ serverUrl, appId });
-CONTRACT_ADDRESS = "0x7c890C40E8114f6F21A075035dBEb22813502481";
+import { keys } from "../keys.js";
+
+const appId = keys.appId;
+const serverUrl = keys.serverUrl;
+const CONTRACT_ADDRESS = keys.CONTRACT_ADDRESS;
 const options = { address: CONTRACT_ADDRESS, chain: "bsc testnet" };
+Moralis.start({ serverUrl, appId });
+
 let web3;
  
 

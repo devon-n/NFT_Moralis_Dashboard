@@ -55,7 +55,7 @@ function renderInventory(NFTs, ownerData) {
         } catch (err) {
             nftOwners = 1;
         }
-        console.log(nft)
+
         let htmlString = `
         <div class="card h-100">
             <img class="card-img-top h-50" src="${nft.metadata.image}" alt="Card image cap">

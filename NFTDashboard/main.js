@@ -4,6 +4,7 @@ const appId = keys.appId;
 const serverUrl = keys.serverUrl;
 const CONTRACT_ADDRESS = keys.CONTRACT_ADDRESS;
 const options = { address: CONTRACT_ADDRESS, chain: "bsc testnet" };
+let currentUser;
 
 Moralis.start({ serverUrl, appId });
 
@@ -41,7 +42,7 @@ function fetchNFTMetadata(NFTs){
 
 
 
-function renderInventory(NFTs) {
+function renderInventory(NFTs, ownerData) {
 
     const parent = document.getElementById("app");
 
@@ -62,6 +63,7 @@ function renderInventory(NFTs) {
                 <h5 class="card-title">${nft.metadata.name}</h5>
                 <p class="card-text">${nft.metadata.description}</p>
                 <p class="card-text">Tokens in Circulation: ${nft.amount}</p>
+                <p class="card-text">Your Balance: ${ownerData[nft.token_id]}</p>
                 <p class="card-text">No. of Owners: ${nftOwners}</p>
                 <p class="card-text">Token ID: ${nft.token_id}</p>
                 <a href="./mint.html?nftId=${nft.token_id}" class="btn btn-primary">Mint</a>
@@ -76,8 +78,20 @@ function renderInventory(NFTs) {
     }
 }
 
+async function getOwnerData() {
+    let accounts = currentUser.get("accounts");
+    const options = { chain: "bsc testnet", address: accounts[0], token_address: CONTRACT_ADDRESS};
+    return Moralis.Web3API.account.getNFTsForContract(options).then((data) => {
+        let result = data.result.reduce( (object, currentElement) => {
+            object[currentElement.token_id] = currentElement.amount;
+            return object;
+        }, {})
+        return(result);
+    });
+}
+
 async function initializeApp() {
-    let currentUser = Moralis.User.current();
+    currentUser = Moralis.User.current();
     if(!currentUser) {
         currentUser = await Moralis.Web3.authenticate();
     }
@@ -88,8 +102,9 @@ async function initializeApp() {
 
     let NFTWithMetadata = await fetchNFTMetadata(NFTs.result);
     NFTWithMetadata = NFTs.result;
+    let ownerData = await getOwnerData();
 
-    renderInventory(NFTWithMetadata);
+    renderInventory(NFTWithMetadata, ownerData);
 
     
 }

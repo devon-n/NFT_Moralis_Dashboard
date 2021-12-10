@@ -18,14 +18,9 @@ async function initializeApp() {
         window.location.pathname = "/index.html";
     }
 
-    // web3 = await Moralis.Web3.enableWeb3();
-    // accounts = await web3.eth.getAccounts();
-
-
     const urlParams = new URLSearchParams(window.location.search);
     const nftId = urlParams.get("nftId");
     document.getElementById("token_id_input").value = nftId;
-    // document.getElementById("address_input").value = accounts[0];
 }
 
 async function transfer() { 
@@ -42,7 +37,9 @@ async function transfer() {
         amount: amount
     }
 
-    let result = await Moralis.transfer(options);
+    let result = await Moralis.transfer(options)
+
+    alert("Mint Completed\nTx: " + result.blockHash.toString());   
     console.log(result);
 }
 
